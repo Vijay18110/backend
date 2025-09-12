@@ -5,7 +5,6 @@ exports.getAllProducts = async (req, res) => {
     try {
         if (!Products || Products.length === 0) {
             const errorResponse = ApiResponse.error("Products not found!", 404);
-
             // Encrypt the error response
             const encryptedError = await ApiEncryptDecrypt.encryptString(
                 process.env.Encryption_Decryption_Key,
