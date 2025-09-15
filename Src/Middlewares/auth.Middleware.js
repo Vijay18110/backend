@@ -12,7 +12,6 @@ exports.authMiddleware = async (req, res, next) => {
         return res.status(401).json({ data: encryptedError })
     }
     try {
-        console.log(token)
         const decoded = jsonwebtoken.verify(token.split(' ')[1], process.env.JWT_SECRET);
         req.user = decoded; // Attach user info to request 
         console.log(decoded)
