@@ -5,14 +5,19 @@ const dotenv = require('dotenv');
 const { loginRouter } = require('./Src/Routes/authRoutes.router');
 const { productRoutes } = require('./Src/Routes/products');
 const sendOTP = require('./Src/Utility/sendOTPUsingFast92MSG');
-const cors = require('cors')
+const cors = require('cors');
+const { connectDB } = require('./Src/DBConnection/DB');
 dotenv.config({ path: './.env' });
 const app = express();
 const port = process.env.PORT;
+//database connection
+connectDB();
 // Middleware
-app.use(cors())
+app.use(cors());
 app.use(express.json());
 //routes
+
+//
 app.use("/api/v1/auth", loginRouter);
 app.use("/api/v1/product", productRoutes);
 app.get('/', (req, res) => {

@@ -1,30 +1,37 @@
 const jsonwebtoken = require('jsonwebtoken');
 const ApiResponse = require('../Utility/ApiResponse');
 const ApiEncryptDecrypt = require('../Utility/Encryption');
+const { registerModel } = require('../Modal/register.model');
 exports.login = async (req, res) => {
     const { mobileNo, password } = req.body;
     // Here you would typically check the mobileNo and password against a database
-    if (mobileNo === '9628554907' && password === '123456') {
-        // If the credentials are valid, you might generate a token or set a session
-        // For this example, we'll just send a success message
-        // In a real application, you would return a JWT or session ID here
-        const token = jsonwebtoken.sign({ mobileNo }, process.env.JWT_SECRET, { expiresIn: '10m' });
-        const successResponse = await ApiResponse.success({ token: token }, "Login successful", 200);
-        // Encrypt the error response
-        // const encryptedRes = await ApiEncryptDecrypt.encryptString(
-        //     process.env.Encryption_Decryption_Key,
-        //     JSON.stringify(errorResponse)
-        // );
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: true, // only over HTTPS
-            // sameSite: "Strict",
-        });
-        res.json({ data: successResponse });
-    } else {
-        const errorResponse = await ApiResponse.error("Invalid credentials", 401);
-        // Encrypt the error response
-        res.status(401).json({ data: errorResponse });
+    try {
+        const doc = await registerModel.findOne({ mobile: mobileNo, password: password });
+        if (doc) {
+            // If the credentials are valid, you might generate a token or set a session
+            // For this example, we'll just send a success message
+            // In a real application, you would return a JWT or session ID here
+            const token = jsonwebtoken.sign({ mobileNo }, process.env.JWT_SECRET, { expiresIn: '10m' });
+            const successResponse = await ApiResponse.success({ token: token }, "Login successful", 200);
+            // Encrypt the error response
+            // const encryptedRes = await ApiEncryptDecrypt.encryptString(
+            //     process.env.Encryption_Decryption_Key,
+            //     JSON.stringify(errorResponse)
+            // );
+            res.cookie("token", token, {
+                httpOnly: true,
+                secure: true, // only over HTTPS
+                // sameSite: "Strict",
+            });
+            res.json({ data: successResponse });
+        } else {
+            const errorResponse = await ApiResponse.error("Invalid credentials", 401);
+            // Encrypt the error response
+            res.status(401).json({ data: errorResponse });
+        }
+
+    } catch (error) {
+
     }
 }
 exports.logout = (req, res) => {
@@ -36,7 +43,7 @@ exports.logout = (req, res) => {
         return res.status(400).json({ message: 'No token found, already logged out.' });
     }
     const decodedToken = jsonwebtoken.verify(token, process.env.JWT_SECRET);
-    if (decodedToken?.mobileNo !== 'vijay18110') {
+    if (decodedToken?.mobileNo !== '9628554907') {
         return res.status(400).json({ message: 'invalid Token!' });
     }
     res.clearCookie("token", {
