@@ -17,6 +17,7 @@ exports.login = async (req, res) => {
             //     process.env.Encryption_Decryption_Key,
             //     JSON.stringify(errorResponse)
             // );
+            await registerModel.updateOne({ _id: doc._id }, { token: token });
             res.cookie("token", token, {
                 httpOnly: true,
                 secure: true, // only over HTTPS
@@ -28,27 +29,56 @@ exports.login = async (req, res) => {
             // Encrypt the error response
             res.status(401).json({ data: errorResponse });
         }
-
     } catch (error) {
+    }
+}
+exports.logout = async (req, res) => {
+    try {
+        const token = req.headers && req.headers["authorization"]?.split(" ")[1];
+        if (!token) {
+            const errorResponse = await ApiResponse.error('No token found, already logged out.', 401, null);
+            return res.json({ data: errorResponse });
+        }
 
+        let decodedToken;
+        try {
+            decodedToken = jsonwebtoken.verify(token, process.env.JWT_SECRET);
+        } catch (err) {
+            // Token expired or invalid
+            const errorResponse = await ApiResponse.error("Token expired or invalid.", 401, null);
+            return res.json({ data: errorResponse });
+        }
+
+        const doc = await registerModel.findOne({ mobile: decodedToken?.mobileNo });
+        if (!doc) {
+            const errorResponse = await ApiResponse.error("Invalid token!", 401, null);
+            return res.json({ data: errorResponse });
+        }
+
+        if (!doc?.token) {
+            const errorResponse = await ApiResponse.error("Invalid token!", 401, null);
+            return res.json({ data: errorResponse });
+        }
+
+        // Clear token cookie
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: true,
+            sameSite: "Strict",
+        });
+
+        // Invalidate token in DB
+        await registerModel.updateOne(
+            { mobile: decodedToken.mobileNo },
+            { token: "" }
+        );
+
+        const successResponse = await ApiResponse.success(null, "Logout successful!", 200);
+        return res.json({ data: successResponse });
+
+    } catch (err) {
+        console.error("Logout error:", err);
+        const errorResponse = await ApiResponse.error("Server error during logout.", 500, null);
+        return res.json({ data: errorResponse });
     }
-}
-exports.logout = (req, res) => {
-    // Clear the token cookie to log out the user\
-    // In a real application, you might also invalidate the token on the server side
-    // Here we just clear the cookie
-    const token = req.headers && req.headers["authorization"].split(" ")[1]; // Assuming the token is sent in the Authorization header as Bearer token
-    if (!token) {
-        return res.status(400).json({ message: 'No token found, already logged out.' });
-    }
-    const decodedToken = jsonwebtoken.verify(token, process.env.JWT_SECRET);
-    if (decodedToken?.mobileNo !== '9628554907') {
-        return res.status(400).json({ message: 'invalid Token!' });
-    }
-    res.clearCookie("token", {
-        httpOnly: true,
-        secure: true, // only over HTTPS
-        sameSite: "Strict",
-    });
-    res.status(200).json({ message: 'Logout successful!' });
-}
+};

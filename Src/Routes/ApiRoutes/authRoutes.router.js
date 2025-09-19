@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { register } = require('../../Controllers/ApiControllers/register.controller');
 const { login, logout } = require('../../Controllers/ApiControllers/authController.controller');
 const { registerValidation } = require('../../Middlewares/registerValidation.middleware');
+const { register } = require('../../Controllers/ApiControllers/register.controller');
 const { loginValildation } = require('../../Middlewares/login.middleware');
 const decryptBody = require('../../Middlewares/decryptBody.middleware');
 router.post('/register', decryptBody, registerValidation, register);

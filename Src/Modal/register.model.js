@@ -1,17 +1,14 @@
 const { mongoose } = require("mongoose");
 
 const registerModel = mongoose.Schema({
-
     name: {
         type: String,
         require: true
     },
-
     email: {
         type: String,
         require: true
     },
-
     mobile: {
         type: Number,
         require: true
@@ -19,6 +16,10 @@ const registerModel = mongoose.Schema({
     password: {
         type: String,
         require: true
+    },
+    token: {
+        type: String,
+        require: false
     }
 })
 
