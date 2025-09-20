@@ -2,56 +2,95 @@ const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema(
     {
-        billPrice: { type: Number, required: true },
-        collection: { type: String },
-        color: { type: String },
-        customerId: { type: String, default: "0" },
-        discountPercent: { type: Number, default: 0 },
-        heightFeet: { type: Number },
-        widthFeet: { type: Number },
-
-        // Foreign keys (relations / lookups)
-        collectionId: { type: mongoose.Schema.Types.ObjectId, ref: "Collection" },
-        colorId: { type: mongoose.Schema.Types.ObjectId, ref: "Color" },
-        gstId: { type: mongoose.Schema.Types.ObjectId, ref: "Gst" },
-        materialId: { type: mongoose.Schema.Types.ObjectId, ref: "Material" },
-        productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
-        roomTypeId: { type: mongoose.Schema.Types.ObjectId, ref: "RoomType" },
-        shapeId: { type: mongoose.Schema.Types.ObjectId, ref: "Shape" },
-        sizeId: { type: mongoose.Schema.Types.ObjectId, ref: "Size" },
-        styleId: { type: mongoose.Schema.Types.ObjectId, ref: "Style" },
-        unitId: { type: mongoose.Schema.Types.ObjectId, ref: "Unit" },
-
-        gstPercent: { type: Number },
-        hsnCode: { type: String },
-
-        // Booleans
-        bestSeller: { type: Boolean, default: false },
-        custom: { type: Boolean, default: false },
-        newArrival: { type: Boolean, default: false },
-        outOfStock: { type: Boolean, default: false },
-        washable: { type: Boolean, default: false },
-
-        mrpPrice: { type: Number },
-        mainCartId: { type: String },
-        material: { type: String },
-        cartId: { type: String },
-        productDetailsId: { type: String },
-
-        description: { type: String },
-        name: { type: String, required: true },
-        otherImage: { type: String },
-        quantity: { type: Number, default: 1 },
-        roomType: { type: String },
-        sku: { type: String },
-        salePrice: { type: Number },
-
-        shape: { type: String },
-        style: { type: String },
-        thumbnail: { type: String },
-        unit: { type: String },
-        variant: { type: String },
-        variantImage: { type: String }
+        name: {
+            type: String,
+            required: true,
+            trim: true,
+        },
+        slug: {
+            type: String,
+            unique: true,
+            lowercase: true,
+            index: true,
+        },
+        description: {
+            type: String,
+            required: true,
+        },
+        price: {
+            type: Number,
+            required: true,
+            min: 0,
+        },
+        discountPrice: {
+            type: Number,
+            default: null,
+        },
+        currency: {
+            type: String,
+            default: "INR",
+        },
+        stock: {
+            type: Number,
+            required: true,
+            min: 0,
+        },
+        sku: {
+            type: String,
+            unique: true,
+            required: true,
+        },
+        categoryId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Category",
+            required: true, // main category
+        },
+        subCategoryId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Category",
+            default: null, // optional
+        },
+        brand: {
+            type: String,
+        },
+        images: [
+            {
+                url: String,
+                alt: String,
+            },
+        ],
+        tags: [
+            {
+                type: String,
+                trim: true,
+            },
+        ],
+        attributes: {
+            color: String,
+            size: String,
+            weight: String,
+            material: String,
+        },
+        rating: {
+            average: { type: Number, default: 0 },
+            count: { type: Number, default: 0 },
+        },
+        reviews: [
+            {
+                user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+                rating: { type: Number, min: 1, max: 5 },
+                comment: String,
+                createdAt: { type: Date, default: Date.now },
+            },
+        ],
+        isFeatured: {
+            type: Boolean,
+            default: false,
+        },
+        isActive: {
+            type: Boolean,
+            default: true,
+        },
     },
     { timestamps: true }
 );

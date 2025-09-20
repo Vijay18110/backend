@@ -1,21 +1,28 @@
+const ProductModel = require("../../Modal/Product.model");
 const { Products } = require("../../StaticData/products");
 const ApiResponse = require("../../Utility/ApiResponse");
 
 exports.getAllProducts = async (req, res) => {
     try {
-        if (!Products || Products.length === 0) {
+        // if (!Products || Products.length === 0) {
+        //     const errorResponse = await ApiResponse.error("Products not found!", 404);
+        //     // Encrypt the error response
+        //     return res.status(404).json({ data: errorResponse });
+        // }
+        const products = await ProductModel.find();
+        console.log(products)
+        if (products.length < 1) {
             const errorResponse = await ApiResponse.error("Products not found!", 404);
             // Encrypt the error response
             return res.status(404).json({ data: errorResponse });
         }
         const successResponse = await ApiResponse.success(
-            Products,
+            products,
             "All Products Get Successfully!",
             200
         );
         // Encrypt the success response
         return res.status(200).json({ data: successResponse });
-
     } catch (err) {
         console.error(err);
         const errorResponse = await ApiResponse.error("Internal server error", 500);
