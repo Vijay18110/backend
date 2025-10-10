@@ -12,7 +12,7 @@ exports.getAllProducts = async (req, res) => {
         const products = await ProductModel.find();
         console.log(products)
         const successResponse = await ApiResponse.success(
-            products,
+            Products,
             "All Products Get Successfully!",
             200
         );
