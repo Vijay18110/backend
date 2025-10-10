@@ -17,7 +17,7 @@ exports.getAllProducts = async (req, res) => {
             return res.status(404).json({ data: errorResponse });
         }
         const successResponse = await ApiResponse.success(
-            products,
+            Products,
             "All Products Get Successfully!",
             200
         );
@@ -39,6 +39,6 @@ exports.getProductById = async (req, res) => {
         return res.status(400).json({ data: errrorResponse });
     }
     // Sending the product as a response
-    const successResponse = await ApiResponse.success(product, "Products Get Successfully!", 404);
+    const successResponse = await ApiResponse.success(product, "Products Get Successfully!", 200);
     return res.status(200).json({ data: successResponse });
 }

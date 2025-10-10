@@ -14,7 +14,7 @@ exports.register = async (req, res, next) => {
         })
         const res1 = await doc.save();
         const { __v, password: P, ...safeRes } = res1.toObject();
-        const successResponse = await ApiResponse.success(safeRes, "Resgistration Successfull!", 501, null)
+        const successResponse = await ApiResponse.success(safeRes, "Resgistration Successfull!", 200, null)
         return res.json({ data: successResponse });
     } catch (error) {
         const errorResponse = await ApiResponse.error("Internal Server Error!", 500, null)
