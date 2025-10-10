@@ -11,11 +11,6 @@ exports.getAllProducts = async (req, res) => {
         // }
         const products = await ProductModel.find();
         console.log(products)
-        if (products.length < 1) {
-            const errorResponse = await ApiResponse.error("Products not found!", 404);
-            // Encrypt the error response
-            return res.status(404).json({ data: errorResponse });
-        }
         const successResponse = await ApiResponse.success(
             Products,
             "All Products Get Successfully!",
