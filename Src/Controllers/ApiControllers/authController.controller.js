@@ -10,7 +10,8 @@ exports.login = async (req, res) => {
             // If the credentials are valid, you might generate a token or set a session
             // For this example, we'll just send a success message
             // In a real application, you would return a JWT or session ID here
-            const token = jsonwebtoken.sign({ mobileNo }, process.env.JWT_SECRET, { expiresIn: '10m' });
+            const { _id, mobile, name } = doc.toObject()
+            const token = jsonwebtoken.sign({ _id, mobile, name }, process.env.JWT_SECRET, { expiresIn: '10m' });
             const successResponse = await ApiResponse.success({ token: token }, "Login successful", 200);
             // Encrypt the error response
             // const encryptedRes = await ApiEncryptDecrypt.encryptString(
@@ -27,11 +28,13 @@ exports.login = async (req, res) => {
         } else {
             const errorResponse = await ApiResponse.error("Invalid credentials", 401);
             // Encrypt the error response
+
             res.status(401).json({ data: errorResponse });
         }
     } catch (error) {
     }
 }
+
 exports.logout = async (req, res) => {
     try {
         const token = req.headers && req.headers["authorization"]?.split(" ")[1];
@@ -48,7 +51,6 @@ exports.logout = async (req, res) => {
             const errorResponse = await ApiResponse.error("Token expired or invalid.", 401, null);
             return res.json({ data: errorResponse });
         }
-
         const doc = await registerModel.findOne({ mobile: decodedToken?.mobileNo });
         if (!doc) {
             const errorResponse = await ApiResponse.error("Invalid token!", 401, null);
@@ -66,6 +68,7 @@ exports.logout = async (req, res) => {
             secure: true,
             sameSite: "Strict",
         });
+
 
         // Invalidate token in DB
         await registerModel.updateOne(

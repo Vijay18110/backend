@@ -3,16 +3,17 @@ const { Products } = require("../../StaticData/products");
 const ApiResponse = require("../../Utility/ApiResponse");
 
 exports.getAllProducts = async (req, res) => {
+
     try {
         // if (!Products || Products.length === 0) {
         //     const errorResponse = await ApiResponse.error("Products not found!", 404);
         //     // Encrypt the error response
         //     return res.status(404).json({ data: errorResponse });
         // }
-        const products = await ProductModel.find();
-        console.log(products)
+        const docs = await ProductModel.find();
+
         const successResponse = await ApiResponse.success(
-            Products,
+            docs,
             "All Products Get Successfully!",
             200
         );
@@ -24,7 +25,6 @@ exports.getAllProducts = async (req, res) => {
         res.status(500).json({ data: errorResponse });
     }
 };
-
 exports.getProductById = async (req, res) => {
     const productId = parseInt(req.params.id, 10);
     // Simulating a database call to get a product by ID

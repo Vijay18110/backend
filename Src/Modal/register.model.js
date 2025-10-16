@@ -17,9 +17,36 @@ const registerModel = mongoose.Schema({
         type: String,
         require: true
     },
+    pincode: {
+        type: String,
+        require: false
+    },
+    city: {
+        type: String,
+        require: false
+    },
+    state: {
+        type: String,
+        require: false
+    },
+    address: {
+        type: String,
+        require: false
+    },
+    dob: {
+        type: String,
+        require: false
+    },
+    gender: {
+        type: String,
+        require: false
+    },
     token: {
         type: String,
         require: false
+    },
+    avatar: {
+        type: String
     }
 })
 
