@@ -48,7 +48,6 @@ exports.logout = async (req, res) => {
             { _id: req.user._id },
             { token: "" }
         );
-
         const successResponse = await ApiResponse.success(null, "Logout successful!", 200);
         return res.json({ data: successResponse });
     } catch (err) {

@@ -34,7 +34,7 @@ app.use((err, req, res, next) => {
 
 app.use(
   cors({
-    origin: ["http://localhost:5174", 'https://backend-q4qd.onrender.com'], // <-- add all frontend URLs
+    origin: ["http://localhost:5174", 'https://ecommerceproject10.netlify.app'], // <-- add all frontend URLs
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true, // allow cookies/auth headers
   })
