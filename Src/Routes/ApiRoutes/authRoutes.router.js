@@ -5,7 +5,8 @@ const { registerValidation } = require('../../Middlewares/registerValidation.mid
 const { register } = require('../../Controllers/ApiControllers/register.controller');
 const { loginValildation } = require('../../Middlewares/login.middleware');
 const decryptBody = require('../../Middlewares/decryptBody.middleware');
+const { authMiddleware } = require('../../Middlewares/auth.Middleware');
 router.post('/register', decryptBody, registerValidation, register);
 router.post('/login', decryptBody, loginValildation, login);
-router.post('/logout', decryptBody, logout);
+router.post('/logout', authMiddleware, decryptBody, logout);
 exports.loginRouter = router;

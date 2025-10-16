@@ -37,48 +37,20 @@ exports.login = async (req, res) => {
 
 exports.logout = async (req, res) => {
     try {
-        const token = req.headers && req.headers["authorization"]?.split(" ")[1];
-        if (!token) {
-            const errorResponse = await ApiResponse.error('No token found, already logged out.', 401, null);
-            return res.json({ data: errorResponse });
-        }
-
-        let decodedToken;
-        try {
-            decodedToken = jsonwebtoken.verify(token, process.env.JWT_SECRET);
-        } catch (err) {
-            // Token expired or invalid
-            const errorResponse = await ApiResponse.error("Token expired or invalid.", 401, null);
-            return res.json({ data: errorResponse });
-        }
-        const doc = await registerModel.findOne({ mobile: decodedToken?.mobileNo });
-        if (!doc) {
-            const errorResponse = await ApiResponse.error("Invalid token!", 401, null);
-            return res.json({ data: errorResponse });
-        }
-
-        if (!doc?.token) {
-            const errorResponse = await ApiResponse.error("Invalid token!", 401, null);
-            return res.json({ data: errorResponse });
-        }
-
         // Clear token cookie
         res.clearCookie("token", {
             httpOnly: true,
             secure: true,
             sameSite: "Strict",
         });
-
-
         // Invalidate token in DB
         await registerModel.updateOne(
-            { mobile: decodedToken.mobileNo },
+            { _id: req.user._id },
             { token: "" }
         );
 
         const successResponse = await ApiResponse.success(null, "Logout successful!", 200);
         return res.json({ data: successResponse });
-
     } catch (err) {
         console.error("Logout error:", err);
         const errorResponse = await ApiResponse.error("Server error during logout.", 500, null);
