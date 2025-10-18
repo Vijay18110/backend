@@ -13,6 +13,7 @@ const { subcategoryRouter } = require('./Src/Routes/ApiRoutes/subcategoryRoute')
 const { bannerRoute } = require('./Src/Routes/ApiRoutes/BannerRoute');
 const { profileRoute } = require('./Src/Routes/ApiRoutes/profileRouter');
 const { addressRoute } = require('./Src/Routes/ApiRoutes/addressRoute');
+const { addToCartRoutes } = require('./Src/Routes/ApiRoutes/addToCart.mode');
 // environment setup
 dotenv.config({ path: './.env' });
 const app = express();
@@ -49,6 +50,7 @@ app.use("/api/v1", subcategoryRouter);
 app.use('/api/v1/getBanner', bannerRoute);
 app.use('/api/v1', profileRoute);
 app.use('/api/v1', addressRoute);
+app.use('/api/v1', addToCartRoutes);
 
 //webRoutes
 app.use("/", webRoutes);

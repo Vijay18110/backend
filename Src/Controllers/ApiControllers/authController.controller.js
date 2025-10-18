@@ -10,8 +10,8 @@ exports.login = async (req, res) => {
             // If the credentials are valid, you might generate a token or set a session
             // For this example, we'll just send a success message
             // In a real application, you would return a JWT or session ID here
-            const { _id, mobile, name } = doc.toObject()
-            const token = jsonwebtoken.sign({ _id, mobile, name }, process.env.JWT_SECRET, { expiresIn: '10m' });
+            const { _id, mobile, name } = doc.toObject();
+            const token = jsonwebtoken.sign({ _id, mobile, name }, process.env.JWT_SECRET, { expiresIn: '12h' });
             const successResponse = await ApiResponse.success({ token: token }, "Login successful", 200);
             // Encrypt the error response
             // const encryptedRes = await ApiEncryptDecrypt.encryptString(
