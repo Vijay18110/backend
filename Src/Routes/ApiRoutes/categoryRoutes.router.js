@@ -4,6 +4,6 @@ const { authMiddleware } = require('../../Middlewares/auth.Middleware');
 const router = require('express').Router();
 
 
-router.get('/getAllCategories', authMiddleware, categoryController);
+router.get('/getAllCategories', categoryController);
 
 exports.categoryRouter = router;

@@ -1,5 +1,6 @@
 const { cartModel } = require("../../Modal/cart.model");
 const ProductModel = require("../../Modal/Product.model");
+const { wishlistModel } = require("../../Modal/wishlist.model");
 const ApiResponse = require("../../Utility/ApiResponse");
 
 exports.addToCart = async (req, res) => {
@@ -153,3 +154,8 @@ exports.updateCartQuantity = async (req, res) => {
         return res.status(500).json({ data: errorRes });
     }
 };
+
+
+
+
+

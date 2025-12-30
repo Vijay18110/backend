@@ -5,5 +5,5 @@ const decryptBody = require('../../Middlewares/decryptBody.middleware');
 const router = require('express').Router();
 
 
-router.get('/', authMiddleware, decryptBody, getBanner);
+router.get('/', decryptBody, getBanner);
 exports.bannerRoute = router;
